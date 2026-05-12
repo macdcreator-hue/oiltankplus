@@ -188,19 +188,17 @@ p { line-height: 1.65; color: var(--text); }
 .section-label {
   display: inline-flex;
   align-items: center;
-  background: var(--cream);
-  color: var(--teal);
+  background: none;
+  color: var(--orange);
   font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   line-height: 16px;
-  padding: 6px 12px;
-  border-radius: var(--radius-full);
-  letter-spacing: 0.02em;
+  padding: 0;
+  border-radius: 0;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
-
-/* Section labels on cream backgrounds need white bg to be visible */
-.bg-cream .section-label { background: var(--white); }
 
 /* ============================================================
    TOP BAR
@@ -791,7 +789,7 @@ p { line-height: 1.65; color: var(--text); }
 .page-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(10,37,41,0.72) 0%, rgba(17,86,95,0.52) 100%);
+  background: linear-gradient(160deg, rgba(9,55,62,0.88) 0%, rgba(17,86,95,0.78) 35%, rgba(44,143,150,0.58) 70%, rgba(44,143,150,0.38) 100%);
 }
 
 .page-hero-content {
@@ -1364,6 +1362,11 @@ p { line-height: 1.65; color: var(--text); }
   background: var(--teal-pale);
 }
 
+.faq-sidebar {
+  position: sticky;
+  top: calc(var(--nav-h) + 32px);
+}
+
 .faq-sidebar-links {
   display: flex;
   flex-direction: column;
@@ -1372,6 +1375,37 @@ p { line-height: 1.65; color: var(--text); }
 }
 
 .faq-sidebar-links .btn { align-self: flex-start; }
+
+/* ============================================================
+   STICKY 2-COLUMN LAYOUT
+   ============================================================ */
+.sticky-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.sticky-col {
+  position: sticky;
+  top: calc(var(--nav-h) + 32px);
+}
+
+.sticky-col h2 { margin-top: 12px; margin-bottom: 20px; }
+.sticky-col > p { color: var(--text-muted); max-width: 38ch; line-height: 1.65; }
+
+.sticky-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.sticky-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
 /* ============================================================
    CTA SECTION
@@ -2335,6 +2369,9 @@ footer {
   .hero-quick-quote { display: none; }
   .video-section { grid-template-columns: 1fr; gap: 40px; }
   .faq-layout { grid-template-columns: 1fr; gap: 40px; }
+  .faq-sidebar { position: static; }
+  .sticky-layout { grid-template-columns: 1fr; gap: 40px; }
+  .sticky-col { position: static; }
   .nav-links, .nav-actions .btn { display: none; }
   .nav-toggle { display: flex; }
   .nav-mobile { display: flex; flex-direction: column; }
