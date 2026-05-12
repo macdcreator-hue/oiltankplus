@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAccordion();
   initTankFilter();
   initQuoteForm();
+  initVideoEmbeds();
   markActivePage();
 });
 
@@ -334,7 +335,12 @@ function initCounters() {
         const p = Math.min((now - start) / duration, 1);
         const val = (target * ease(p)).toFixed(decimals);
         el.textContent = prefix + val + suffix;
-        if (p < 1) requestAnimationFrame(tick);
+        if (p < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          el.classList.add('count-done');
+          setTimeout(() => el.classList.remove('count-done'), 700);
+        }
       };
 
       requestAnimationFrame(tick);
@@ -470,6 +476,27 @@ function initQuoteForm() {
   });
 
   goTo(1);
+}
+
+/* ============================================================
+   VIDEO EMBEDS (privacy-friendly lazy load)
+   ============================================================ */
+function initVideoEmbeds() {
+  document.querySelectorAll('.video-wrap[data-video-id]').forEach(wrap => {
+    const btn = wrap.querySelector('.video-play');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const id = wrap.dataset.videoId;
+      wrap.innerHTML = `<iframe
+        src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1"
+        title="Oil Tanks Plus installation video"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>`;
+    });
+  });
 }
 
 /* ============================================================
