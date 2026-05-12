@@ -199,6 +199,9 @@ p { line-height: 1.65; color: var(--text); }
   letter-spacing: 0.02em;
 }
 
+/* Section labels on cream backgrounds need white bg to be visible */
+.bg-cream .section-label { background: var(--white); }
+
 /* ============================================================
    TOP BAR
    ============================================================ */
@@ -575,7 +578,7 @@ p { line-height: 1.65; color: var(--text); }
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(10,37,41,0.55) 0%, rgba(17,86,95,0.40) 100%);
+  background: linear-gradient(160deg, rgba(9,55,62,0.88) 0%, rgba(17,86,95,0.78) 35%, rgba(44,143,150,0.58) 70%, rgba(44,143,150,0.38) 100%);
 }
 
 .hero-content {
@@ -636,11 +639,12 @@ p { line-height: 1.65; color: var(--text); }
   margin-bottom: 40px;
 }
 
-/* Hero trust pill badges */
+/* Hero trust — flat list with orange icons, no pill */
 .hero-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  column-gap: 28px;
+  row-gap: 14px;
   padding-top: 32px;
   border-top: 1px solid rgba(255,255,255,.15);
 }
@@ -648,18 +652,14 @@ p { line-height: 1.65; color: var(--text); }
 .hero-trust-item {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background: rgba(255,255,255,.15);
-  border-radius: var(--radius-full);
-  padding: 6px 14px;
+  gap: 10px;
   font-family: var(--font-body);
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--white);
-  backdrop-filter: blur(4px);
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,.92);
 }
 
-.hero-trust-item svg { color: rgba(255,255,255,.8); }
+.hero-trust-item svg { color: var(--orange); flex-shrink: 0; }
 
 /* Hero entrance stagger — fires on load, not scroll */
 @media (prefers-reduced-motion: no-preference) {
@@ -912,7 +912,7 @@ p { line-height: 1.65; color: var(--text); }
   font-size: 48px;
   line-height: 48px;
   font-weight: 600;
-  color: var(--white);
+  color: var(--orange);
   display: block;
 }
 
@@ -1194,11 +1194,11 @@ p { line-height: 1.65; color: var(--text); }
   border-radius: var(--radius-lg);
   margin-bottom: 10px;
   overflow: hidden;
-  transition: box-shadow .2s;
+  transition: box-shadow .25s var(--ease);
 }
 
 .accordion-item:has(.accordion-trigger[aria-expanded="true"]) {
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), inset 3px 0 0 var(--orange);
 }
 
 .accordion-trigger {
@@ -2276,8 +2276,8 @@ footer {
     50%       { transform: translateY(-8px); }
   }
   @keyframes countGlow {
-    0%, 100% { color: var(--white); }
-    50%       { color: var(--orange); text-shadow: 0 0 20px rgba(246,109,30,.6); }
+    0%, 100% { color: var(--orange); text-shadow: none; }
+    50%       { color: var(--orange-light); text-shadow: 0 0 28px rgba(246,109,30,1), 0 0 56px rgba(246,109,30,.5); }
   }
   @keyframes shimmerSweep {
     from { transform: translateX(-100%); }
