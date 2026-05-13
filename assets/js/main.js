@@ -64,6 +64,10 @@ const NAV_HTML = `
       <li><a href="contact.html">Contact</a></li>
     </ul>
     <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </button>
       <a href="tel:03332224037" class="nav-phone" aria-label="Call 0333 222 4037">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.63 19.79 19.79 0 01.01 4a2 2 0 011.99-2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
         0333 222 4037
@@ -88,6 +92,10 @@ const NAV_HTML = `
   <div class="nav-mobile-actions">
     <a href="quote.html" class="btn btn-primary" style="width:100%;justify-content:center">Get a Free Quote</a>
     <a href="tel:03332224037" class="btn btn-secondary" style="width:100%;justify-content:center">0333 222 4037</a>
+    <button class="theme-toggle" id="themeToggleMobile" aria-label="Toggle dark mode" style="align-self:center;margin-top:4px">
+      <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
   </div>
 </div>
 `;
@@ -185,6 +193,7 @@ const FOOTER_HTML = `
    ============================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   injectComponents();
+  initThemeToggle();
   initNav();
   initParallax();
   initReveal();
@@ -212,6 +221,22 @@ function markActivePage() {
     if (a.getAttribute('href') === page) {
       a.closest('li')?.classList.add('active');
     }
+  });
+}
+
+/* ============================================================
+   THEME (dark / light)
+   ============================================================ */
+function initThemeToggle() {
+  function toggleTheme() {
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = isDark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('otp-theme', next); } catch(e) {}
+  }
+  ['themeToggle', 'themeToggleMobile'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', toggleTheme);
   });
 }
 
@@ -449,8 +474,27 @@ function initQuoteForm() {
     form.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  function shakePanel() {
+    const panel = form.querySelector('.quote-panel.active');
+    if (!panel) return;
+    panel.classList.remove('form-shake');
+    void panel.offsetWidth; // reflow to restart animation
+    panel.classList.add('form-shake');
+    panel.addEventListener('animationend', () => panel.classList.remove('form-shake'), { once: true });
+  }
+
+  function validateCurrentPanel() {
+    const panel = form.querySelector('.quote-panel.active');
+    if (!panel) return true;
+    const required = panel.querySelectorAll('[required]');
+    let valid = true;
+    required.forEach(el => { if (!el.value.trim()) { el.focus(); valid = false; } });
+    return valid;
+  }
+
   nextBtns.forEach(btn => {
     btn.addEventListener('click', () => {
+      if (!validateCurrentPanel()) { shakePanel(); return; }
       if (currentStep < totalSteps) goTo(currentStep + 1);
     });
   });
