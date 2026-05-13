@@ -940,7 +940,7 @@ p { line-height: 1.65; color: var(--text); }
   .hero-inner .lead { animation: fadeSlideUp .7s var(--ease-out) .4s both; }
   .hero-actions  { animation: fadeSlideUp .7s var(--ease-out)   .55s both; }
   .hero-trust    { animation: fadeSlideUp .7s var(--ease-out)   .7s  both; }
-  .hero-quick-quote { animation: fadeSlideUp .7s var(--ease-out) .45s both, floatCard 5s ease-in-out 1.2s infinite; }
+  .hero-quick-quote { animation: fadeSlideUp .7s var(--ease-out) .45s both, floatCard 6s linear 1.2s infinite; will-change: transform; }
 
   /* Hero CTA button subtle attention pulse after parent fades in — 3 cycles */
   .hero-actions .btn-primary {
@@ -2822,8 +2822,9 @@ footer {
     100% { opacity: 1; transform: scale(1); }
   }
   @keyframes floatCard {
-    0%, 100% { transform: translateY(0px); }
-    50%       { transform: translateY(-8px); }
+    0%   { transform: translateY(0px);   animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+    50%  { transform: translateY(-12px); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+    100% { transform: translateY(0px); }
   }
   @keyframes countGlow {
     0%, 100% { color: var(--orange); text-shadow: none; }
