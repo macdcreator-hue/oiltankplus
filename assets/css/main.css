@@ -90,28 +90,32 @@
    DARK MODE — token overrides + component patches
    ============================================================ */
 [data-theme="dark"] {
-  --bg:           #0C1B1E;
-  --white:        #111F23;
-  --cream:        #0E1F22;
+  /* Surfaces — spread apart for visible section alternation */
+  --bg:           #0C1B1E;   /* page background */
+  --white:        #14282E;   /* bg-white sections + card surfaces */
+  --cream:        #091719;   /* bg-cream sections (distinctly darker) */
   --warm-cream:   #180E02;
   --stats-bg:     #061318;
-  --teal-pale:    #0E2326;
-  --orange-pale:  #2A1500;
+  --teal-pale:    #1C3A40;   /* icon / badge backgrounds (clearly visible) */
+  --orange-pale:  #2D1800;   /* orange icon bg in dark */
 
-  --deep:         #E0ECED;
-  --text:         #E0ECED;
-  --text-muted:   rgba(224,236,237,0.65);
-  --text-light:   rgba(224,236,237,0.45);
+  /* Text — warm teal-tinted whites, better readability */
+  --deep:         #D8E9EB;   /* headings */
+  --text:         #D8E9EB;   /* body text */
+  --text-muted:   rgba(185,215,220,0.82);  /* secondary text — warmer + more readable */
+  --text-light:   rgba(185,215,220,0.5);
 
-  --border:       rgba(255,255,255,0.08);
-  --border-solid: rgba(255,255,255,0.12);
-  --border-light: rgba(255,255,255,0.06);
+  /* Borders */
+  --border:        rgba(255,255,255,0.08);
+  --border-solid:  rgba(255,255,255,0.13);
+  --border-light:  rgba(255,255,255,0.05);
 
-  --shadow-xs: rgba(0,0,0,0.25) 0px 1px 2px;
-  --shadow-sm: rgba(0,0,0,0.3) 0px 1px 2px, rgba(0,0,0,0.25) 0px 8px 24px -8px;
-  --shadow:    rgba(0,0,0,0.3) 0px 2px 4px, rgba(0,0,0,0.35) 0px 12px 32px -4px;
-  --shadow-lg: rgba(0,0,0,0.4) 0px 4px 8px, rgba(0,0,0,0.5) 0px 20px 48px -8px;
-  --shadow-xl: rgba(0,0,0,0.5) 0px 8px 16px, rgba(0,0,0,0.6) 0px 32px 64px -8px;
+  /* Shadows */
+  --shadow-xs: rgba(0,0,0,0.28) 0px 1px 2px;
+  --shadow-sm: rgba(0,0,0,0.32) 0px 1px 2px, rgba(0,0,0,0.28) 0px 8px 24px -8px;
+  --shadow:    rgba(0,0,0,0.35) 0px 2px 4px, rgba(0,0,0,0.4) 0px 12px 32px -4px;
+  --shadow-lg: rgba(0,0,0,0.45) 0px 4px 8px, rgba(0,0,0,0.55) 0px 20px 48px -8px;
+  --shadow-xl: rgba(0,0,0,0.55) 0px 8px 16px, rgba(0,0,0,0.65) 0px 32px 64px -8px;
 }
 
 /* Nav glass in dark mode */
@@ -128,13 +132,20 @@
 
 /* Dark form select chevron */
 [data-theme="dark"] .hero-quick-form select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23E0ECED' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23D8E9EB' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 }
 
 /* Accordion hover on dark cream sections */
 [data-theme="dark"] .bg-cream .accordion-trigger:hover,
 [data-theme="dark"] .bg-cream .accordion-trigger[aria-expanded="true"] {
   background: rgba(255,255,255,0.05);
+}
+
+/* Accordion on bg-white sections in dark */
+[data-theme="dark"] .bg-white .accordion-trigger { background: var(--white); }
+[data-theme="dark"] .bg-white .accordion-trigger:hover,
+[data-theme="dark"] .bg-white .accordion-trigger[aria-expanded="true"] {
+  background: rgba(255,255,255,0.04);
 }
 
 /* btn-secondary in dark mode */
@@ -156,7 +167,7 @@
 [data-theme="dark"] .bg-forest,
 [data-theme="dark"] .bg-navy { background: #07161A; }
 [data-theme="dark"] .hero,
-[data-theme="dark"] .page-hero { background: #0A2529; } /* image fallback — rarely visible */
+[data-theme="dark"] .page-hero { background: #0A2529; } /* image fallback */
 [data-theme="dark"] .coverage-block { background: #07161A; }
 [data-theme="dark"] .filter-btn.active {
   background: var(--orange);
@@ -164,6 +175,120 @@
   color: #fff;
 }
 [data-theme="dark"] .tag-forest { background: rgba(255,255,255,0.1); color: var(--text); }
+
+/* Section-label pill in dark mode */
+[data-theme="dark"] .section-label {
+  background: rgba(246,109,30,0.14);
+  color: var(--orange-light);
+}
+
+/* Why-icon / service-icon in dark mode — ensure icon bg is visible */
+[data-theme="dark"] .why-icon {
+  background: rgba(246,109,30,0.16);
+  color: var(--orange-light);
+}
+[data-theme="dark"] .why-card:hover .why-icon {
+  background: var(--orange);
+  color: #fff;
+}
+[data-theme="dark"] .service-icon {
+  background: var(--teal-pale);
+  color: var(--teal-light);
+}
+[data-theme="dark"] .service-card:hover .service-icon {
+  background: rgba(246,109,30,0.2);
+  color: var(--orange);
+}
+
+/* Testimonial avatar in dark mode */
+[data-theme="dark"] .testimonial-avatar {
+  background: var(--teal-pale);
+  color: var(--teal-light);
+}
+
+/* Testimonial quote mark in dark mode */
+[data-theme="dark"] .testimonial-card::after {
+  color: var(--orange);
+  opacity: 0.08;
+}
+
+/* Process number stays orange — fine. Process step card bg */
+[data-theme="dark"] .process-step {
+  background: var(--white);
+}
+
+/* Stats grid stays dark via --stats-bg token — fine */
+
+/* News category badge in dark */
+[data-theme="dark"] .news-category {
+  background: var(--teal-pale);
+  color: var(--teal-light);
+}
+
+/* Coverage stats numbers */
+[data-theme="dark"] .coverage-stat strong { color: var(--orange-light); }
+
+/* Tank card body h3 */
+[data-theme="dark"] .tank-card-body h3 { color: var(--text); }
+[data-theme="dark"] .tank-card-body .tank-capacity { color: var(--teal-light); }
+
+/* Filter bar in dark */
+[data-theme="dark"] .filter-bar {
+  background: var(--white);
+  border-color: var(--border-solid);
+}
+[data-theme="dark"] .filter-btn {
+  background: var(--cream);
+  border-color: var(--border-solid);
+  color: var(--text-muted);
+}
+[data-theme="dark"] .filter-btn:hover {
+  border-color: var(--teal-light);
+  color: var(--text);
+}
+
+/* ---- Headings that must stay white in dark mode ---- */
+/* Hero is always on a dark image overlay — h1 must stay bright white */
+[data-theme="dark"] .hero h1,
+[data-theme="dark"] .page-hero h1 { color: #ffffff; }
+
+/* Coverage block and CTA section always have dark backgrounds */
+[data-theme="dark"] .coverage-text h2 { color: #ffffff; }
+[data-theme="dark"] .cta-text h2     { color: #ffffff; }
+[data-theme="dark"] .cta-text p      { color: rgba(255,255,255,.72); }
+
+/* Footer column headings (Services, Company, Contact) */
+[data-theme="dark"] .footer-col h5 { color: rgba(255,255,255,0.9); }
+
+/* CTA section buttons in dark — dark bg needs visible button styles */
+[data-theme="dark"] .btn-cta-white {
+  background: rgba(255,255,255,0.13);
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.25);
+}
+[data-theme="dark"] .btn-cta-white:hover {
+  background: rgba(255,255,255,0.22);
+  border-color: rgba(255,255,255,0.4);
+}
+[data-theme="dark"] .btn-cta-outline { color: #ffffff; }
+
+/* Coverage block buttons */
+[data-theme="dark"] .coverage-block .btn-white {
+  background: rgba(255,255,255,0.13);
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.25);
+}
+[data-theme="dark"] .coverage-block .btn-white:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+/* ---- Social proof popup — always dark regardless of theme ---- */
+/* Override so --deep resolving to a light colour in dark mode doesn't break it */
+[data-theme="dark"] .social-proof {
+  background: #0A2529;
+  border-color: rgba(255,255,255,0.12);
+}
+[data-theme="dark"] .sp-live { border-color: #0A2529; }
 
 /* --- Reset & Base --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -240,9 +365,9 @@ h1, h2, h3 {
 }
 
 h1 { font-size: 72px; line-height: 72px; letter-spacing: -0.02em; }
-h2 { font-size: 48px; line-height: 48px; letter-spacing: -0.015em; }
-h3 { font-size: 24px; line-height: 1.3; }
-h4 { font-family: var(--font-body); font-size: 16px; font-weight: 600; line-height: 1.5; color: var(--deep); }
+h2 { font-size: 48px; line-height: 52px; letter-spacing: -0.015em; }
+h3 { font-size: 28px; line-height: 1.3; letter-spacing: -0.01em; }
+h4 { font-family: var(--font-body); font-size: 18px; font-weight: 600; line-height: 1.4; color: var(--deep); }
 h5 { font-family: var(--font-body); font-size: 12px; font-weight: 600; line-height: 1.4; color: var(--deep); }
 
 p { line-height: 1.65; color: var(--text); }
@@ -306,14 +431,14 @@ p { line-height: 1.65; color: var(--text); }
 .section-label {
   display: inline-flex;
   align-items: center;
-  background: none;
+  background: var(--orange-pale);
   color: var(--orange);
   font-family: var(--font-body);
   font-size: 11px;
   font-weight: 700;
   line-height: 16px;
-  padding: 0;
-  border-radius: 0;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
@@ -1199,20 +1324,20 @@ p { line-height: 1.65; color: var(--text); }
 
 .why-icon {
   width: 48px; height: 48px;
-  background: var(--teal-pale);
+  background: var(--orange-pale);
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--deep);
+  color: var(--orange);
   flex-shrink: 0;
-  transition: transform .3s var(--ease-spring), background .2s;
+  transition: transform .3s var(--ease-spring), background .2s, color .2s;
 }
 
 .why-card:hover .why-icon {
   transform: rotate(-8deg) scale(1.12);
-  background: var(--orange-pale);
-  color: var(--orange);
+  background: var(--orange);
+  color: var(--white);
 }
 
 .why-card h4 { color: var(--deep); font-size: 16px; font-weight: 600; margin-bottom: 8px; }
@@ -1313,6 +1438,22 @@ p { line-height: 1.65; color: var(--text); }
   pointer-events: none;
 }
 
+/* Decorative large quote mark — background watermark */
+.testimonial-card::after {
+  content: '\201C';
+  position: absolute;
+  top: 8px;
+  right: 20px;
+  font-family: var(--font-head);
+  font-size: 96px;
+  line-height: 1;
+  color: var(--orange);
+  opacity: 0.1;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+}
+
 .testimonial-card:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-3px);
@@ -1360,6 +1501,62 @@ p { line-height: 1.65; color: var(--text); }
   font-family: var(--font-body);
   font-size: 12px;
   color: var(--teal-mid);
+}
+
+/* ============================================================
+   TESTIMONIAL MARQUEE CAROUSEL
+   ============================================================ */
+.testimonial-marquee-outer {
+  position: relative;
+  overflow: hidden;
+  margin-inline: -40px;
+  padding-inline: 40px;
+  cursor: default;
+  /* fade edges for depth */
+  mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+}
+
+.testimonial-marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .testimonial-marquee-track {
+    animation: marqueeScroll 34s linear infinite;
+  }
+  .testimonial-marquee-outer:hover .testimonial-marquee-track,
+  .testimonial-marquee-outer:focus-within .testimonial-marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marqueeScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+}
+
+.marquee-set {
+  display: flex;
+  gap: 24px;
+  padding-right: 24px;
+  flex-shrink: 0;
+}
+
+.testimonial-marquee-track .testimonial-card {
+  width: 420px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .testimonial-marquee-outer {
+    margin-inline: -20px;
+    padding-inline: 20px;
+  }
+  .testimonial-marquee-track .testimonial-card {
+    width: 300px;
+  }
+  .marquee-set { gap: 16px; padding-right: 16px; }
 }
 
 /* ============================================================
@@ -1598,6 +1795,7 @@ p { line-height: 1.65; color: var(--text); }
   background: var(--deep);
   position: relative;
   overflow: hidden;
+  border-top: 3px solid var(--orange);
 }
 
 .cta-section::before {
@@ -2372,7 +2570,7 @@ p { line-height: 1.65; color: var(--text); }
   bottom: 32px;
   left: 50%;
   z-index: var(--z-modal);
-  background: var(--deep);
+  background: #0A2529;
   border: 1px solid rgba(255,255,255,.12);
   border-radius: var(--radius-full);
   padding: 9px 14px 9px 10px;
@@ -2421,7 +2619,7 @@ p { line-height: 1.65; color: var(--text); }
   height: 8px;
   background: #22c55e;
   border-radius: 50%;
-  border: 1.5px solid var(--deep);
+  border: 1.5px solid #0A2529;
 }
 
 @media (prefers-reduced-motion: no-preference) {
