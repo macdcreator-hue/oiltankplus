@@ -592,13 +592,9 @@ function initSocialProof() {
         <div class="sp-avatar" aria-hidden="true">${p.initials}</div>
         <span class="sp-live" aria-hidden="true"></span>
       </div>
-      <div class="sp-body">
-        <p class="sp-name">${p.name}, ${p.location}</p>
-        <p class="sp-action">${p.action}</p>
-        <p class="sp-time">Just now</p>
-      </div>
+      <span class="sp-text"><strong>${p.name}, ${p.location}</strong> ${p.action}<span class="sp-dot">·</span><span class="sp-time">just now</span></span>
       <button class="sp-close" aria-label="Dismiss notification">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     `;
 

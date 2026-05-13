@@ -2365,23 +2365,23 @@ p { line-height: 1.65; color: var(--text); }
 .badge-warm   { background: var(--warm-cream); color: var(--orange); }
 
 /* ============================================================
-   SOCIAL PROOF NOTIFICATION
+   SOCIAL PROOF NOTIFICATION — single-line pill, bottom-centre
    ============================================================ */
 .social-proof {
   position: fixed;
-  bottom: 28px;
-  left: 28px;
+  bottom: 32px;
+  left: 50%;
   z-index: var(--z-modal);
   background: var(--deep);
   border: 1px solid rgba(255,255,255,.12);
-  border-radius: var(--radius-lg);
-  padding: 14px 40px 14px 14px;
+  border-radius: var(--radius-full);
+  padding: 9px 14px 9px 10px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  max-width: 296px;
+  gap: 10px;
+  white-space: nowrap;
   box-shadow: var(--shadow-lg);
-  transform: translateY(calc(100% + 48px));
+  transform: translateX(-50%) translateY(calc(100% + 56px));
   opacity: 0;
   transition: transform .42s cubic-bezier(0.25, 1, 0.5, 1), opacity .32s;
   pointer-events: none;
@@ -2389,7 +2389,7 @@ p { line-height: 1.65; color: var(--text); }
 }
 
 .social-proof.sp-visible {
-  transform: translateY(0);
+  transform: translateX(-50%) translateY(0);
   opacity: 1;
   pointer-events: auto;
 }
@@ -2400,13 +2400,13 @@ p { line-height: 1.65; color: var(--text); }
 }
 
 .sp-avatar {
-  width: 40px;
-  height: 40px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.14);
   color: rgba(255,255,255,.9);
   font-family: var(--font-head);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -2415,13 +2415,13 @@ p { line-height: 1.65; color: var(--text); }
 
 .sp-live {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 10px;
-  height: 10px;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
   background: #22c55e;
   border-radius: 50%;
-  border: 2px solid var(--deep);
+  border: 1.5px solid var(--deep);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -2432,46 +2432,40 @@ p { line-height: 1.65; color: var(--text); }
   .sp-live { animation: livePulse 2s ease-in-out infinite; }
 }
 
-.sp-body { flex: 1; min-width: 0; }
-
-.sp-name {
+.sp-text {
   font-family: var(--font-body);
   font-size: 13px;
+  line-height: 1;
+  color: rgba(255,255,255,.75);
+}
+
+.sp-text strong {
   font-weight: 600;
   color: var(--orange);
 }
 
-.sp-action {
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: rgba(255,255,255,.7);
-  line-height: 1.4;
-  margin: 2px 0 0;
+.sp-dot {
+  margin: 0 3px;
+  color: rgba(255,255,255,.3);
 }
 
 .sp-time {
-  font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 500;
-  color: rgba(255,255,255,.45);
-  margin: 4px 0 0;
-  letter-spacing: .02em;
+  color: rgba(255,255,255,.4);
+  font-size: 12px;
 }
 
 .sp-close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255,255,255,.45);
+  color: rgba(255,255,255,.35);
   transition: background .15s, color .15s;
   cursor: pointer;
   flex-shrink: 0;
+  margin-left: 2px;
 }
 
 .sp-close:hover {
@@ -2479,8 +2473,16 @@ p { line-height: 1.65; color: var(--text); }
   color: var(--white);
 }
 
-@media (max-width: 480px) {
-  .social-proof { left: 16px; right: 16px; max-width: none; bottom: 20px; }
+@media (max-width: 600px) {
+  .social-proof {
+    left: 16px;
+    right: 16px;
+    transform: translateX(0) translateY(calc(100% + 56px));
+    border-radius: var(--radius-lg);
+    white-space: normal;
+    bottom: 20px;
+  }
+  .social-proof.sp-visible { transform: translateX(0) translateY(0); }
 }
 
 /* ============================================================
