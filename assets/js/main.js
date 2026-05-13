@@ -193,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTankFilter();
   initQuoteForm();
   initVideoEmbeds();
+  initSocialProof();
   markActivePage();
 });
 
@@ -366,19 +367,14 @@ function initAccordion() {
   document.querySelectorAll('.accordion-trigger').forEach(btn => {
     btn.addEventListener('click', () => {
       const expanded = btn.getAttribute('aria-expanded') === 'true';
-      const content = btn.nextElementSibling;
 
-      /* Close siblings */
+      /* Close siblings — CSS grid-template-rows handles the animation */
       btn.closest('.accordion-item')?.parentElement
         ?.querySelectorAll('.accordion-trigger').forEach(b => {
-          if (b !== btn) {
-            b.setAttribute('aria-expanded', 'false');
-            b.nextElementSibling.style.maxHeight = '0';
-          }
+          if (b !== btn) b.setAttribute('aria-expanded', 'false');
         });
 
       btn.setAttribute('aria-expanded', String(!expanded));
-      content.style.maxHeight = expanded ? '0' : content.scrollHeight + 'px';
     });
   });
 }
@@ -505,6 +501,83 @@ function initVideoEmbeds() {
       ></iframe>`;
     });
   });
+}
+
+/* ============================================================
+   SOCIAL PROOF NOTIFICATION
+   ============================================================ */
+function initSocialProof() {
+  if (location.pathname.includes('quote')) return;
+
+  const PROOFS = [
+    { initials: 'SR', name: 'Sarah',   location: 'Devon',          action: 'just requested a free quote' },
+    { initials: 'JH', name: 'James',   location: 'Yorkshire',      action: 'just booked a free site survey' },
+    { initials: 'TM', name: 'Tom',     location: 'Shropshire',     action: 'had a new bunded tank installed' },
+    { initials: 'EP', name: 'Emma',    location: 'Kent',           action: 'just requested a free quote' },
+    { initials: 'DW', name: 'David',   location: 'Norfolk',        action: 'just replaced their oil tank' },
+    { initials: 'RB', name: 'Rachel',  location: 'Lincolnshire',   action: 'just booked a free site survey' },
+    { initials: 'MW', name: 'Michael', location: 'Somerset',       action: 'just requested a commercial quote' },
+    { initials: 'LF', name: 'Laura',   location: 'Worcestershire', action: 'had their new tank installed today' },
+  ];
+
+  let shown = 0;
+  const MAX = 4;
+  let hideTimer = null;
+  let nextTimer = null;
+
+  const el = document.createElement('div');
+  el.className = 'social-proof';
+  el.setAttribute('aria-live', 'polite');
+  el.setAttribute('role', 'status');
+  document.body.appendChild(el);
+
+  const dismiss = () => {
+    clearTimeout(hideTimer);
+    el.classList.remove('sp-visible');
+    if (shown < MAX) {
+      nextTimer = setTimeout(show, 22000 + Math.random() * 12000);
+    }
+  };
+
+  const show = () => {
+    if (shown >= MAX) return;
+    const p = PROOFS[shown % PROOFS.length];
+
+    el.innerHTML = `
+      <div class="sp-avatar-wrap">
+        <div class="sp-avatar" aria-hidden="true">${p.initials}</div>
+        <span class="sp-live" aria-hidden="true"></span>
+      </div>
+      <div class="sp-body">
+        <p class="sp-name">${p.name}, ${p.location}</p>
+        <p class="sp-action">${p.action}</p>
+        <p class="sp-time">Just now</p>
+      </div>
+      <button class="sp-close" aria-label="Dismiss notification">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    `;
+
+    el.querySelector('.sp-close').addEventListener('click', () => {
+      shown = MAX; /* stop after manual close */
+      clearTimeout(nextTimer);
+      dismiss();
+    });
+
+    el.classList.add('sp-visible');
+    shown++;
+    hideTimer = setTimeout(dismiss, 5500);
+  };
+
+  /* Trigger: user has scrolled 400px + 4s delay */
+  let triggered = false;
+  const onScroll = () => {
+    if (triggered || window.scrollY < 400) return;
+    triggered = true;
+    window.removeEventListener('scroll', onScroll);
+    nextTimer = setTimeout(show, 4000);
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 /* ============================================================
