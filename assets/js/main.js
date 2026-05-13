@@ -318,12 +318,11 @@ function initCounters() {
   const counters = document.querySelectorAll('[data-count]');
   if (!counters.length) return;
 
+  const allCounters = Array.from(counters);
   const ease = t => t < .5 ? 2*t*t : -1+(4-2*t)*t;
 
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      const el = e.target;
+  const runCounter = (el, delay) => {
+    setTimeout(() => {
       const target = parseFloat(el.dataset.count);
       const duration = 1800;
       const suffix = el.dataset.suffix || '';
@@ -344,6 +343,15 @@ function initCounters() {
       };
 
       requestAnimationFrame(tick);
+    }, delay);
+  };
+
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target;
+      const idx = allCounters.indexOf(el);
+      runCounter(el, idx * 200);
       obs.unobserve(el);
     });
   }, { threshold: 0.5 });
