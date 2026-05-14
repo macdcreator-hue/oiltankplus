@@ -966,7 +966,7 @@ p { line-height: 1.65; color: var(--text); }
   border: 1px solid rgba(255,255,255,0.6);
   border-radius: var(--radius-lg);
   padding: 28px 24px;
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-xl), inset 0 1px 1px rgba(255,255,255,0.5);
   flex-shrink: 0;
 }
 
@@ -1974,10 +1974,10 @@ p { line-height: 1.65; color: var(--text); }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform .5s var(--ease);
+  transition: transform .55s var(--ease-out);
 }
 
-.tank-card:hover .tank-card-img img { transform: scale(1.04); }
+.tank-card:hover .tank-card-img img { transform: scale(1.06); }
 
 .tank-card-tags {
   position: absolute;
@@ -2182,7 +2182,7 @@ p { line-height: 1.65; color: var(--text); }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform .4s var(--ease);
+  transition: transform .45s var(--ease-out);
 }
 
 .news-card:hover .news-card-img img { transform: scale(1.05); }
@@ -2940,6 +2940,171 @@ footer {
   .hero-actions { flex-direction: column; align-items: flex-start; }
   .hero-actions .btn { width: 100%; justify-content: center; }
   .contact-info-card, .contact-form-card { padding: 28px 20px; }
+}
+
+/* ============================================================
+   IMAGE BLUR-UP REVEAL
+   ============================================================ */
+.img-blur-up {
+  filter: blur(8px);
+  opacity: 0;
+  transform: scale(1.02);
+  transition: filter .6s var(--ease-out), opacity .5s var(--ease-out), transform .6s var(--ease-out);
+}
+.img-blur-up.loaded {
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Skeleton shimmer for image loading */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes skeletonShimmer {
+    from { background-position: -200% 0; }
+    to   { background-position:  200% 0; }
+  }
+}
+.img-skeleton {
+  background: linear-gradient(90deg, var(--cream) 25%, var(--border-solid) 50%, var(--cream) 75%);
+  background-size: 200% 100%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .img-skeleton { animation: skeletonShimmer 1.6s var(--ease) infinite; }
+}
+
+/* ============================================================
+   TANK CARD TAGS — LIQUID GLASS UPGRADE
+   ============================================================ */
+.tank-card-tags .tag {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 2px 6px rgba(0,0,0,0.14);
+}
+.tank-card-tags .tag-forest { background: rgba(10,37,41,0.82); }
+.tank-card-tags .tag-teal   { background: rgba(44,143,150,0.85); }
+.tank-card-tags .tag-orange { background: rgba(246,109,30,0.88); }
+.tank-card-tags .tag-cream  {
+  background: rgba(236,243,244,0.88);
+  border-color: rgba(219,228,230,0.5);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.08);
+}
+
+/* ============================================================
+   NEWS CATEGORY — DATA-CAT COLOR CODING
+   ============================================================ */
+.news-category[data-cat="installation"] { background: var(--orange-pale); color: var(--orange-dark); }
+.news-category[data-cat="regulation"]   { background: #EEF2FF; color: #4338CA; }
+.news-category[data-cat="maintenance"]  { background: var(--teal-pale); color: var(--teal); }
+.news-category[data-cat="commercial"]   { background: var(--deep); color: var(--white); }
+.news-category[data-cat="guide"]        { background: var(--warm-cream); color: var(--orange-dark); }
+.news-category[data-cat="environment"]  { background: #ECFDF5; color: #065F46; }
+.news-category[data-cat="compliance"]   { background: #FEF3C7; color: #92400E; }
+
+/* ============================================================
+   HERO TRUST BAR — STAGGERED CASCADE
+   ============================================================ */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-trust-item:nth-child(1) { animation: fadeSlideUp .5s var(--ease-out) .75s both; }
+  .hero-trust-item:nth-child(2) { animation: fadeSlideUp .5s var(--ease-out) .85s both; }
+  .hero-trust-item:nth-child(3) { animation: fadeSlideUp .5s var(--ease-out) .95s both; }
+  .hero-trust-item:nth-child(4) { animation: fadeSlideUp .5s var(--ease-out) 1.05s both; }
+}
+
+/* ============================================================
+   SERVICE CARD — HOVER CHOREOGRAPHY UPGRADE
+   ============================================================ */
+.service-card {
+  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out), background .2s;
+}
+.service-card:hover {
+  transform: translateY(-6px);
+}
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s var(--ease-out);
+}
+.service-card:hover::after { opacity: 1; }
+
+/* ============================================================
+   WHY CARD — SHIMMER ON HOVER
+   ============================================================ */
+.why-card {
+  position: relative;
+  overflow: hidden;
+}
+.why-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 60%);
+  opacity: 0;
+  transition: opacity .3s var(--ease-out);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.why-card:hover::before { opacity: 1; }
+.why-card:hover { box-shadow: var(--shadow); }
+
+/* ============================================================
+   PROCESS STEP — NUMBER POP + CONNECTOR COLOUR
+   ============================================================ */
+.process-step[data-reveal].visible .process-number {
+  animation: popIn .45s var(--ease-spring) .15s both;
+}
+
+/* ============================================================
+   STAT COUNTER — GLOW FLASH CLASS
+   ============================================================ */
+.count-done {
+  animation: countGlow .6s var(--ease-out) both;
+}
+
+/* ============================================================
+   FEATURED NEWS — GRADIENT CAPTION OVERLAY
+   ============================================================ */
+.news-featured-img {
+  position: relative;
+}
+.news-featured-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(9,55,62,0.28) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ============================================================
+   DARK MODE PATCHES FOR NEW STYLES
+   ============================================================ */
+[data-theme="dark"] .tank-card-tags .tag-cream {
+  background: rgba(44,143,150,0.22);
+  color: rgba(255,255,255,0.75);
+  border-color: rgba(255,255,255,0.12);
+}
+[data-theme="dark"] .news-category[data-cat="regulation"] {
+  background: rgba(67,56,202,0.2);
+  color: #A5B4FC;
+}
+[data-theme="dark"] .news-category[data-cat="environment"] {
+  background: rgba(6,95,70,0.25);
+  color: #6EE7B7;
+}
+[data-theme="dark"] .news-category[data-cat="compliance"] {
+  background: rgba(146,64,14,0.25);
+  color: #FCD34D;
+}
+[data-theme="dark"] .news-featured-img::after {
+  background: linear-gradient(to right, rgba(0,0,0,0.38) 0%, transparent 60%);
+}
+[data-theme="dark"] .service-card::after {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 /* ============================================================

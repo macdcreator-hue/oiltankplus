@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initQuoteForm();
   initVideoEmbeds();
   initSocialProof();
+  initImageBlurUp();
   markActivePage();
 });
 
@@ -618,6 +619,23 @@ function initSocialProof() {
     nextTimer = setTimeout(show, 4000);
   };
   window.addEventListener('scroll', onScroll, { passive: true });
+}
+
+/* ============================================================
+   IMAGE BLUR-UP REVEAL
+   ============================================================ */
+function initImageBlurUp() {
+  const imgs = document.querySelectorAll('img.img-blur-up');
+  if (!imgs.length) return;
+
+  imgs.forEach(img => {
+    if (img.complete && img.naturalWidth) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => img.classList.add('loaded'), { once: true });
+      img.addEventListener('error', () => img.classList.add('loaded'), { once: true });
+    }
+  });
 }
 
 /* ============================================================
