@@ -2156,6 +2156,10 @@ p { line-height: 1.65; color: var(--text); }
 }
 
 .news-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
   background: var(--white);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
