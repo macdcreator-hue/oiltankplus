@@ -28,28 +28,316 @@
   <title>Oil Tank Installation Locations UK | Oil Tanks Plus</title>
   <script>(function(){try{var t=localStorage.getItem('otp-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}}());</script>
   <link rel="stylesheet" href="assets/css/main.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&family=Inter:wght@400;500;600&display=swap">
   <script type="application/ld+json">
   {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://www.oiltanksplus.co.uk/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Locations"
-    }
-  ]
-}
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.oiltanksplus.co.uk/"},
+      {"@type": "ListItem", "position": 2, "name": "Locations"}
+    ]
+  }
   </script>
+  <style>
+    /* ===== MAP EXPLORER ===== */
+    .map-section { background: var(--white); }
+    .map-explorer {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      height: 700px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Sidebar */
+    .map-sidebar {
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      border-right: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .map-sidebar-head {
+      padding: 28px 22px 18px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .map-sidebar-head .section-label { margin-bottom: 10px; }
+    .map-sidebar-head h2 {
+      font-family: var(--font-head);
+      font-size: 22px;
+      line-height: 1.25;
+      color: var(--deep);
+      margin: 0 0 16px;
+    }
+    .map-search-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border-solid);
+      border-radius: var(--radius-full);
+      padding: 9px 14px;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    .map-search-wrap:focus-within {
+      border-color: var(--orange);
+      box-shadow: var(--shadow-focus);
+    }
+    .map-search-wrap svg { flex-shrink: 0; color: var(--text-muted); }
+    .map-search-wrap input {
+      flex: 1;
+      border: none;
+      background: none;
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      font-family: var(--font-body);
+    }
+    .map-search-wrap input::placeholder { color: var(--text-muted); }
+
+    /* Region cards */
+    .map-region-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-solid) transparent;
+    }
+    .map-region-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 13px;
+      border-radius: var(--radius-lg);
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      background: transparent;
+      font-family: var(--font-body);
+      transition: background .16s var(--ease), border-color .16s var(--ease), transform .2s var(--ease-out);
+      margin-bottom: 2px;
+    }
+    .map-region-card:hover { background: var(--cream); transform: translateX(2px); }
+    .map-region-card.active { background: var(--orange-pale); border-color: var(--orange); }
+    .map-card-pin {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--teal-pale);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--teal-mid);
+      flex-shrink: 0;
+      margin-top: 1px;
+      transition: background .16s, color .16s, transform .2s var(--ease-spring);
+    }
+    .map-region-card:hover .map-card-pin,
+    .map-region-card.active .map-card-pin {
+      background: var(--orange);
+      color: white;
+      transform: scale(1.1);
+    }
+    .map-card-body { flex: 1; min-width: 0; }
+    .map-card-body h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--deep);
+      margin-bottom: 3px;
+      line-height: 1.35;
+    }
+    .map-card-body p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
+    }
+    .map-region-card.active .map-card-body h4 { color: var(--orange-dark); }
+    .map-card-chevron {
+      color: var(--border-solid);
+      flex-shrink: 0;
+      margin-top: 4px;
+      transition: transform .2s var(--ease-out), color .16s;
+    }
+    .map-region-card:hover .map-card-chevron,
+    .map-region-card.active .map-card-chevron { color: var(--orange); transform: translateX(3px); }
+    .map-no-results {
+      text-align: center;
+      padding: 32px 16px;
+      color: var(--text-muted);
+      font-size: 13px;
+      display: none;
+    }
+
+    /* Sidebar footer */
+    .map-sidebar-cta {
+      padding: 13px 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+      background: var(--white);
+      gap: 12px;
+    }
+    .map-sidebar-cta p { font-size: 12.5px; color: var(--text-muted); margin: 0; }
+
+    /* Map panel */
+    .map-panel { position: relative; background: #e8eaed; }
+    #locations-map { width: 100%; height: 100%; }
+
+    /* Map hint pill */
+    .map-hint {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(10,37,41,0.84);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: white;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 18px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+      z-index: 800;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity .5s var(--ease);
+      font-family: var(--font-body);
+    }
+    .map-hint.hidden { opacity: 0; }
+
+    /* Leaflet overrides */
+    .leaflet-popup-content-wrapper {
+      border-radius: 14px !important;
+      box-shadow: 0 8px 32px rgba(10,37,41,0.18) !important;
+      border: 1px solid rgba(219,228,230,0.6) !important;
+      padding: 0 !important;
+    }
+    .leaflet-popup-content { margin: 16px 18px 16px !important; }
+    .leaflet-popup-tip-container { display: none !important; }
+    .leaflet-control-zoom {
+      border: 1px solid rgba(219,228,230,0.8) !important;
+      border-radius: 12px !important;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(10,37,41,0.1) !important;
+    }
+    .leaflet-control-zoom a {
+      font-size: 17px !important;
+      color: #0A2529 !important;
+      border-color: rgba(219,228,230,0.6) !important;
+      font-family: var(--font-body) !important;
+    }
+    .leaflet-control-zoom a:hover { background: #ECF3F4 !important; color: #F66D1E !important; }
+    .leaflet-attribution-flag { display: none !important; }
+    .leaflet-control-attribution {
+      font-size: 10px !important;
+      background: rgba(255,255,255,0.8) !important;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Custom animated marker */
+    .lmap-marker {
+      position: relative;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .lmap-dot {
+      width: 14px; height: 14px;
+      background: #F66D1E;
+      border: 2.5px solid white;
+      border-radius: 50%;
+      box-shadow: 0 2px 10px rgba(246,109,30,0.55);
+      position: relative; z-index: 2;
+      transition: width .25s var(--ease-spring), height .25s var(--ease-spring), box-shadow .25s;
+    }
+    .lmap-pulse {
+      position: absolute;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 2px solid rgba(246,109,30,0.55);
+      top: 6px; left: 6px;
+      animation: mapPulse 2.6s ease-out infinite;
+    }
+    .lmap-marker--active .lmap-dot {
+      width: 18px; height: 18px;
+      box-shadow: 0 4px 16px rgba(246,109,30,0.75);
+    }
+    .lmap-marker--active .lmap-pulse {
+      animation: mapPulse 1.5s ease-out infinite;
+      border-color: rgba(246,109,30,0.75);
+    }
+    @keyframes mapPulse {
+      0%   { transform: scale(0.5); opacity: 1; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+
+    /* Popup content */
+    .map-popup {
+      font-family: 'Inter', system-ui, sans-serif;
+      min-width: 190px;
+    }
+    .map-popup strong {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #0A2529;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .map-popup p {
+      font-size: 12px;
+      color: #11565F;
+      line-height: 1.45;
+      margin: 0 0 12px;
+    }
+    .map-popup a {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #F66D1E;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+      text-decoration: none;
+      transition: background .15s;
+    }
+    .map-popup a:hover { background: #E85A0C; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .map-explorer { grid-template-columns: 1fr; height: auto; }
+      .map-panel { height: 420px; order: -1; }
+      .map-sidebar { max-height: 400px; }
+    }
+    @media (max-width: 720px) {
+      .map-panel { height: 320px; }
+      .map-sidebar { max-height: 360px; }
+      .map-sidebar-head { padding: 20px 16px 14px; }
+      .map-region-list { padding: 8px; }
+    }
+
+    /* Dark mode patches */
+    [data-theme="dark"] .map-sidebar { background: var(--white); }
+    [data-theme="dark"] .map-sidebar-head { border-color: var(--border); }
+    [data-theme="dark"] .map-search-wrap { background: var(--cream); border-color: var(--border-solid); }
+    [data-theme="dark"] .map-sidebar-cta { background: var(--white); border-color: var(--border); }
+    [data-theme="dark"] .map-region-card:hover { background: var(--cream); }
+    [data-theme="dark"] .map-region-card.active { background: rgba(246,109,30,0.12); border-color: var(--orange); }
+    [data-theme="dark"] .map-region-card.active .map-card-body h4 { color: var(--orange-light); }
+  </style>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -68,21 +356,11 @@
       </nav>
       <h1>Oil Tank Installation Locations Across the UK</h1>
       <p>With 40+ engineer locations covering England, Wales and Scotland, there's an Oil Tanks Plus engineer near you — wherever you are.</p>
-
-      <!-- Location search -->
-      <div style="margin-top:32px;max-width:520px">
-        <div class="locations-search" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);backdrop-filter:blur(12px)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input type="text" id="locationSearch" placeholder="Search by county or region..." aria-label="Search by county or region" style="color:white;background:transparent" autocomplete="off">
-          <button class="btn btn-primary btn-sm" type="button">Search</button>
-        </div>
-        <p style="font-size:.8rem;color:rgba(255,255,255,.55);margin-top:12px">Or call us on <a href="tel:03332224037" style="color:rgba(255,255,255,.8)">0333 222 4037</a> to confirm availability in your postcode</p>
-      </div>
     </div>
   </div>
 </section>
 
-<!-- STATS -->
+<!-- STATS BAR -->
 <div class="trust-bar">
   <div class="trust-bar-inner container">
     <div class="trust-item"><div class="trust-item-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg></div><div class="trust-item-text"><strong>40+ Locations</strong><span>Across England, Wales &amp; Scotland</span></div></div>
@@ -92,70 +370,159 @@
   </div>
 </div>
 
-<!-- REGIONS -->
-<section class="section bg-cream" aria-labelledby="regions-heading">
+<!-- MAP EXPLORER -->
+<section class="map-section" aria-labelledby="map-heading">
+  <div class="map-explorer">
+
+    <!-- Sidebar -->
+    <aside class="map-sidebar" aria-label="Select a region to explore">
+      <div class="map-sidebar-head">
+        <span class="section-label">UK Coverage</span>
+        <h2 id="map-heading">Find Your Region</h2>
+        <div class="map-search-wrap">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="mapSearch" placeholder="Search region or county…" autocomplete="off" aria-label="Search region or county">
+        </div>
+      </div>
+
+      <div class="map-region-list" id="mapRegionList" role="list">
+
+        <button class="map-region-card" data-region="south-east" data-lat="51.18" data-lng="0.40" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>South East England</h4>
+            <p>Kent, Surrey, Sussex, Hampshire, Berkshire, Oxfordshire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="south-west" data-lat="50.85" data-lng="-3.40" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>South West England</h4>
+            <p>Devon, Cornwall, Somerset, Dorset, Wiltshire, Gloucestershire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="east" data-lat="52.30" data-lng="0.90" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>East of England</h4>
+            <p>Norfolk, Suffolk, Essex, Cambridgeshire, Hertfordshire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="east-mids" data-lat="52.80" data-lng="-1.00" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>East Midlands</h4>
+            <p>Lincolnshire, Nottinghamshire, Derbyshire, Leicestershire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="west-mids" data-lat="52.50" data-lng="-2.00" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>West Midlands</h4>
+            <p>Warwickshire, Worcestershire, Shropshire, Staffordshire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="yorkshire" data-lat="53.80" data-lng="-1.60" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>Yorkshire &amp; Humber</h4>
+            <p>North, South, East &amp; West Yorkshire, Lincolnshire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="north-west" data-lat="53.85" data-lng="-2.65" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>North West England</h4>
+            <p>Lancashire, Cumbria, Cheshire, Greater Manchester</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="north-east" data-lat="54.90" data-lng="-1.70" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>North East England</h4>
+            <p>Northumberland, County Durham, Tyne &amp; Wear</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="london" data-lat="51.50" data-lng="-0.10" data-zoom="9" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>London &amp; Home Counties</h4>
+            <p>All London boroughs, Hertfordshire, Essex, Surrey, Kent</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="wales" data-lat="52.10" data-lng="-3.70" data-zoom="7" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>Wales</h4>
+            <p>All Welsh counties — Cardiff to Gwynedd, Pembrokeshire</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="scotland" data-lat="56.80" data-lng="-4.20" data-zoom="6" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>Scotland</h4>
+            <p>Central belt, Highlands, Aberdeenshire, Fife, Dumfries</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <button class="map-region-card" data-region="ni" data-lat="54.60" data-lng="-6.70" data-zoom="8" role="listitem">
+          <div class="map-card-pin" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
+          <div class="map-card-body">
+            <h4>Northern Ireland</h4>
+            <p>Enquiries welcome — call to confirm availability</p>
+          </div>
+          <svg class="map-card-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+
+        <p class="map-no-results" id="mapNoResults">No regions match your search.</p>
+      </div>
+
+      <div class="map-sidebar-cta">
+        <p>Don't see your area? Call us.</p>
+        <a href="tel:03332224037" class="btn btn-primary btn-sm">0333 222 4037</a>
+      </div>
+    </aside>
+
+    <!-- Map -->
+    <div class="map-panel" role="region" aria-label="Interactive UK map showing engineer locations">
+      <div id="locations-map"></div>
+      <div class="map-hint" id="mapHint" aria-hidden="true">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/><circle cx="12" cy="10" r="3"/></svg>
+        Click a region or pin to explore
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- COUNTIES -->
+<section class="section bg-cream" aria-labelledby="counties-heading">
   <div class="container">
-    <div class="section-header" data-reveal>
-      <span class="section-label">UK Regions</span>
-      <h2 id="regions-heading">Where We Operate</h2>
-      <p>Our engineers cover every region of England, Wales and Scotland. Click your region to see counties served.</p>
-    </div>
-
-    <div class="regions-grid" data-reveal>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>South East England</h4><p>Kent, Surrey, Sussex, Hampshire, Berkshire, Oxfordshire &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>South West England</h4><p>Devon, Cornwall, Somerset, Dorset, Wiltshire, Gloucestershire &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>East of England</h4><p>Norfolk, Suffolk, Essex, Cambridgeshire, Hertfordshire &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>East Midlands</h4><p>Lincolnshire, Nottinghamshire, Derbyshire, Leicestershire &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>West Midlands</h4><p>Warwickshire, Worcestershire, Shropshire, Staffordshire &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>Yorkshire &amp; Humber</h4><p>North, South, East &amp; West Yorkshire, Lincolnshire &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>North West England</h4><p>Lancashire, Cumbria, Cheshire, Greater Manchester &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>North East England</h4><p>Northumberland, County Durham, Tyne &amp; Wear &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>Wales</h4><p>All Welsh counties — from Cardiff to Gwynedd, Monmouthshire to Pembrokeshire</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>Scotland</h4><p>Central belt, Highlands, Aberdeenshire, Fife, Dumfries &amp; more</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>London &amp; Home Counties</h4><p>All London boroughs plus Hertfordshire, Essex, Surrey, Kent &amp; Berkshire</p></div>
-      </div>
-      <div class="region-item">
-        <div class="region-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s-8-4.5-8-11.8A8 8 0 0112 2a8 8 0 018 8.2c0 7.3-8 11.8-8 11.8z"/></svg></div>
-        <div><h4>Northern Ireland</h4><p>Call to confirm availability — enquiries welcome from all counties</p></div>
-      </div>
-    </div>
-
-    <!-- Counties -->
-    <div class="section-header" data-reveal style="margin-bottom:32px">
+    <div class="section-header text-center" data-reveal>
       <span class="section-label">All Counties Served</span>
-      <h2>Find Your County</h2>
+      <h2 id="counties-heading">Find Your County</h2>
+      <p>We cover every county in England, Wales and Scotland. If you don't see yours, call us — we'll confirm availability.</p>
     </div>
     <div class="counties-grid" data-reveal>
       <div class="county-badge">Bedfordshire</div>
@@ -221,5 +588,129 @@
 
 <footer id="site-footer" role="contentinfo"></footer>
 <script src="assets/js/main.js"></script>
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+<script>
+(function () {
+  var mapEl = document.getElementById('locations-map');
+  if (!mapEl) return;
+
+  var regions = [
+    { id: 'south-east', name: 'South East England', counties: 'Kent, Surrey, Sussex, Hampshire, Berkshire, Oxfordshire', lat: 51.18, lng: 0.40, zoom: 8 },
+    { id: 'south-west', name: 'South West England', counties: 'Devon, Cornwall, Somerset, Dorset, Wiltshire, Gloucestershire', lat: 50.85, lng: -3.40, zoom: 8 },
+    { id: 'east',       name: 'East of England',    counties: 'Norfolk, Suffolk, Essex, Cambridgeshire, Hertfordshire', lat: 52.30, lng: 0.90, zoom: 8 },
+    { id: 'east-mids',  name: 'East Midlands',      counties: 'Lincolnshire, Nottinghamshire, Derbyshire, Leicestershire', lat: 52.80, lng: -1.00, zoom: 8 },
+    { id: 'west-mids',  name: 'West Midlands',      counties: 'Warwickshire, Worcestershire, Shropshire, Staffordshire', lat: 52.50, lng: -2.00, zoom: 8 },
+    { id: 'yorkshire',  name: 'Yorkshire & Humber', counties: 'North, South, East & West Yorkshire, Lincolnshire', lat: 53.80, lng: -1.60, zoom: 8 },
+    { id: 'north-west', name: 'North West England', counties: 'Lancashire, Cumbria, Cheshire, Greater Manchester', lat: 53.85, lng: -2.65, zoom: 8 },
+    { id: 'north-east', name: 'North East England', counties: 'Northumberland, County Durham, Tyne & Wear', lat: 54.90, lng: -1.70, zoom: 8 },
+    { id: 'london',     name: 'London & Home Counties', counties: 'All London boroughs, Hertfordshire, Essex, Surrey, Kent', lat: 51.50, lng: -0.10, zoom: 9 },
+    { id: 'wales',      name: 'Wales',              counties: 'All Welsh counties — Cardiff to Gwynedd, Pembrokeshire', lat: 52.10, lng: -3.70, zoom: 7 },
+    { id: 'scotland',   name: 'Scotland',           counties: 'Central belt, Highlands, Aberdeenshire, Fife, Dumfries', lat: 56.80, lng: -4.20, zoom: 6 },
+    { id: 'ni',         name: 'Northern Ireland',   counties: 'Enquiries welcome — call us to confirm availability', lat: 54.60, lng: -6.70, zoom: 8 },
+  ];
+
+  // Init map
+  var map = L.map('locations-map', {
+    center: [54.2, -2.5],
+    zoom: 6,
+    zoomControl: false,
+    scrollWheelZoom: false,
+    minZoom: 5,
+    maxZoom: 13,
+  });
+
+  // CartoDB Voyager — clean modern tiles, free, no API key
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(map);
+
+  L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+  var activeId = null;
+  var markers  = {};
+
+  function makeIcon(id, active) {
+    return L.divIcon({
+      className: '',
+      html: '<div class="lmap-marker' + (active ? ' lmap-marker--active' : '') + '"><div class="lmap-pulse"></div><div class="lmap-dot"></div></div>',
+      iconSize:   [40, 40],
+      iconAnchor: [20, 20],
+      popupAnchor:[0, -18],
+    });
+  }
+
+  function setActive(id) {
+    // Deactivate previous
+    if (activeId && markers[activeId]) {
+      markers[activeId].setIcon(makeIcon(activeId, false));
+    }
+    document.querySelectorAll('.map-region-card').forEach(function(el) { el.classList.remove('active'); });
+
+    activeId = id;
+
+    if (markers[id]) markers[id].setIcon(makeIcon(id, true));
+
+    var card = document.querySelector('.map-region-card[data-region="' + id + '"]');
+    if (card) {
+      card.classList.add('active');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Hide hint after first interaction
+    var hint = document.getElementById('mapHint');
+    if (hint) hint.classList.add('hidden');
+  }
+
+  // Create markers
+  regions.forEach(function(r) {
+    var popup = '<div class="map-popup"><strong>' + r.name + '</strong><p>' + r.counties + '</p><a href="quote.html">Get a Free Quote &rarr;</a></div>';
+
+    var marker = L.marker([r.lat, r.lng], { icon: makeIcon(r.id, false) })
+      .addTo(map)
+      .bindPopup(popup, { maxWidth: 240, closeButton: false });
+
+    marker.on('click', function() {
+      setActive(r.id);
+      map.flyTo([r.lat, r.lng], r.zoom, { duration: 1.3, easeLinearity: 0.2 });
+    });
+
+    markers[r.id] = marker;
+  });
+
+  // Sidebar card clicks
+  document.querySelectorAll('.map-region-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      var id = card.dataset.region;
+      var r  = regions.find(function(x) { return x.id === id; });
+      if (!r) return;
+      setActive(id);
+      map.flyTo([r.lat, r.lng], r.zoom, { duration: 1.4, easeLinearity: 0.2 });
+      setTimeout(function() { if (markers[id]) markers[id].openPopup(); }, 900);
+    });
+  });
+
+  // Search filter
+  var searchInput = document.getElementById('mapSearch');
+  var noResults   = document.getElementById('mapNoResults');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      var q = searchInput.value.toLowerCase().trim();
+      var visibleCount = 0;
+      document.querySelectorAll('.map-region-card').forEach(function(card) {
+        var match = card.textContent.toLowerCase().includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+      if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+  }
+
+  // Re-invalidate map size after fonts / layout settle
+  setTimeout(function() { map.invalidateSize(); }, 200);
+}());
+</script>
 </body>
 </html>
