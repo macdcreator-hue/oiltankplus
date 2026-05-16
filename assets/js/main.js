@@ -39,27 +39,28 @@ const NAV_HTML = `
       <li><a href="tank-disposal.html">Tank Disposal</a></li>
       <li class="has-dropdown">
         <a href="oil-tank-range.html">Oil Tank Range</a>
-        <ul class="dropdown" role="list">
+        <ul class="dropdown dropdown-grid" role="list">
           <li><a href="oil-tank-range.html#bunded">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><rect x="5" y="4" width="14" height="16" rx="2" opacity=".4"/></svg>
-            Bunded Tanks
+            <img src="assets/images/menu/bunded-menu.webp" alt="" aria-hidden="true" loading="lazy">
+            <span>Bunded Tanks</span>
           </a></li>
           <li><a href="oil-tank-range.html#single-skin">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/></svg>
-            Single-Skin Tanks
+            <img src="assets/images/menu/single-skin-menu.webp" alt="" aria-hidden="true" loading="lazy">
+            <span>Single-Skin Tanks</span>
           </a></li>
           <li><a href="oil-tank-range.html#steel">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            Steel Tanks
+            <img src="assets/images/menu/steel-menu.webp" alt="" aria-hidden="true" loading="lazy">
+            <span>Steel Tanks</span>
           </a></li>
           <li><a href="oil-tank-range.html#fire-rated">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 01-7 7 7 7 0 01-7-7c0-1.48.4-2.9 1-4.1L8.5 14.5z"/></svg>
-            Fire Rated Tanks
+            <img src="assets/images/menu/fire-rated-menu.png" alt="" aria-hidden="true" loading="lazy">
+            <span>Fire Rated Tanks</span>
           </a></li>
         </ul>
       </li>
       <li><a href="commercial.html">Commercial</a></li>
       <li><a href="locations.html">Locations</a></li>
+      <li><a href="news.html">Tips &amp; Advice</a></li>
       <li><a href="about.html">About Us</a></li>
       <li><a href="contact.html">Contact</a></li>
     </ul>
@@ -86,6 +87,7 @@ const NAV_HTML = `
     <a href="oil-tank-range.html">Oil Tank Range</a>
     <a href="commercial.html">Commercial</a>
     <a href="locations.html">Locations</a>
+    <a href="news.html">Tips &amp; Advice</a>
     <a href="about.html">About Us</a>
     <a href="contact.html">Contact</a>
   </nav>
