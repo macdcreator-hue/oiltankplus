@@ -190,8 +190,8 @@
     .map-sidebar-cta p { font-size: 12.5px; color: var(--text-muted); margin: 0; }
 
     /* Map panel */
-    .map-panel { position: relative; background: #e8eaed; }
-    #locations-map { width: 100%; height: 100%; }
+    .map-panel { position: relative; background: #e8eaed; overflow: hidden; }
+    #locations-map { width: 100%; height: 700px; }
 
     /* Map hint pill */
     .map-hint {
@@ -319,11 +319,12 @@
     /* Responsive */
     @media (max-width: 960px) {
       .map-explorer { grid-template-columns: 1fr; height: auto; }
-      .map-panel { height: 420px; order: -1; }
+      .map-panel { height: auto; order: -1; }
       .map-sidebar { max-height: 400px; }
+      #locations-map { height: 420px; }
     }
     @media (max-width: 720px) {
-      .map-panel { height: 320px; }
+      #locations-map { height: 320px; }
       .map-sidebar { max-height: 360px; }
       .map-sidebar-head { padding: 20px 16px 14px; }
       .map-region-list { padding: 8px; }
