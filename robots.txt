@@ -1,4 +1,25 @@
 User-agent: *
 Allow: /
 
+# AI crawlers — allow all (supports citation in ChatGPT, Perplexity, AI Overviews)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Block Gemini training only (does not affect Google Search or AI Overviews)
+User-agent: Google-Extended
+Disallow: /
+
+# Block ByteDance training crawler
+User-agent: Bytespider
+Disallow: /
+
 Sitemap: https://www.oiltanksplus.co.uk/sitemap.xml
