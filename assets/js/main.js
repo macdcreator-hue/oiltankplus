@@ -28,7 +28,7 @@ const NAV_HTML = `
 <nav class="nav-wrap" id="mainNav" role="navigation" aria-label="Main navigation">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo" aria-label="Oil Tanks Plus – Home">
-      <img src="assets/images/logo-dark.svg" alt="Oil Tanks Plus" width="180" height="38" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <img src="assets/images/logo-dark.svg" alt="Oil Tanks Plus" width="147" height="30" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
       <span style="display:none;align-items:center;gap:8px;font-family:'Fraunces',serif;font-weight:800;font-size:1.1rem;color:#0A2529">
         <svg width="28" height="28" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="8" fill="#0d2e2c"/><path d="M8 28 C8 18 16 10 20 8 C24 10 32 18 32 28 C32 32 28 34 24 32 C22 30 20 30 18 30 C14 30 8 32 8 28Z" fill="#2a7f7a"/><circle cx="20" cy="20" r="4" fill="#fff"/></svg>
         Oil Tanks Plus
