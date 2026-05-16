@@ -16,14 +16,14 @@
   --teal:          #11565F;
   --teal-mid:      #2C8F96;
   --teal-light:    #4DADB5;
-  --teal-pale:     #ECF3F4;
+  --teal-pale:     #DFF0F2; /* distinct from --cream (#ECF3F4) */
 
   /* Backgrounds */
   --bg:            #FBFAF8;
   --white:         #FFFFFF;
   --cream:         #ECF3F4;
   --warm-cream:    #FEF4EB;
-  --stats-bg:      #09373E;
+  --stats-bg:      var(--teal);
 
   /* Text */
   --text:          #0A2529;
@@ -34,20 +34,48 @@
   /* Borders */
   --border:        rgba(219,228,230,0.6);
   --border-solid:  #DBE4E6;
-  --border-light:  rgba(219,228,230,0.6);
+
+  /* Alpha primitives — use instead of inline rgba() */
+  --orange-glass:  rgba(246,109,30,0.12);
+  --deep-glass:    rgba(10,37,41,0.08);
 
   /* Fonts */
   --font-head:     'Fraunces', Georgia, serif;
   --font-body:     'Inter', system-ui, sans-serif;
 
+  /* Typography scale */
+  --text-xs:   11px;
+  --text-sm:   13px;
+  --text-base: 16px;
+  --text-lg:   18px;
+  --text-xl:   28px;
+  --text-2xl:  40px;
+  --text-3xl:  48px;
+  --text-4xl:  72px;
+
   /* Radius */
   --radius-xs:     3px;
   --radius-sm:     6px;
   --radius:        8px;
+  --radius-md:     12px;
   --radius-lg:     16px;
   --radius-xl:     20px;
   --radius-2xl:    24px;
   --radius-full:   9999px;
+
+  /* Spacing scale (4px grid) */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
 
   /* Shadows */
   --shadow-xs:     rgba(10,37,41,0.04) 0px 1px 2px 0px;
@@ -57,18 +85,28 @@
   --shadow-xl:     rgba(10,37,41,0.12) 0px 8px 16px 0px, rgba(10,37,41,0.20) 0px 32px 64px -8px;
   --shadow-btn:    rgba(246,109,30,0.5) 0px 8px 24px -8px;
   --shadow-btn-h:  rgba(246,109,30,0.8) 0px 12px 32px -4px;
+  --shadow-focus:  rgba(246,109,30,0.22) 0px 0px 0px 3px;
 
   /* Layout */
   --nav-h:         80px;
   --topbar-h:      40px;
-  --section-py:    96px;
-  --section-py-sm: 64px;
+  --section-py:    var(--space-24);
+  --section-py-sm: var(--space-16);
 
-  /* Motion */
+  /* Motion — easing */
   --ease:          cubic-bezier(.4,0,.2,1);
   --ease-out:      cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out:   cubic-bezier(0.77, 0, 0.175, 1);
   --ease-spring:   cubic-bezier(0.34, 1.3, 0.64, 1);
-  --transition:    transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), background 120ms var(--ease), border-color 120ms var(--ease), color 120ms var(--ease), opacity 160ms var(--ease-out);
+
+  /* Motion — durations */
+  --duration-instant: 80ms;
+  --duration-fast:    160ms;
+  --duration-base:    250ms;
+  --duration-slow:    400ms;
+  --duration-slower:  600ms;
+
+  --transition:    transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out), background 120ms var(--ease), border-color 120ms var(--ease), color 120ms var(--ease), opacity var(--duration-fast) var(--ease-out);
 
   /* z-index */
   --z-nav:     50;
@@ -76,7 +114,7 @@
   --z-modal:   60;
   --z-top:     70;
 
-  /* Legacy aliases — keep old variable names resolving for inline HTML styles */
+  /* Legacy aliases — used in HTML inline styles, do not remove */
   --forest:       #0A2529;
   --forest-mid:   #11565F;
   --forest-light: #2C8F96;
@@ -94,19 +132,22 @@
   --cream:        #091719;   /* bg-cream sections (distinctly darker) */
   --warm-cream:   #180E02;
   --stats-bg:     #061318;
-  --teal-pale:    #1C3A40;   /* icon / badge backgrounds (clearly visible) */
+  --teal-pale:    #1C3A40;   /* icon / badge backgrounds */
   --orange-pale:  #2D1800;   /* orange icon bg in dark */
 
   /* Text — warm teal-tinted whites, better readability */
   --deep:         #D8E9EB;   /* headings */
   --text:         #D8E9EB;   /* body text */
-  --text-muted:   rgba(185,215,220,0.82);  /* secondary text — warmer + more readable */
+  --text-muted:   rgba(185,215,220,0.82);  /* secondary text */
   --text-light:   rgba(185,215,220,0.5);
 
   /* Borders */
   --border:        rgba(255,255,255,0.08);
   --border-solid:  rgba(255,255,255,0.13);
-  --border-light:  rgba(255,255,255,0.05);
+
+  /* Alpha primitives — dark-mode override */
+  --orange-glass:  rgba(246,109,30,0.16);
+  --deep-glass:    rgba(0,0,0,0.2);
 
   /* Shadows */
   --shadow-xs: rgba(0,0,0,0.28) 0px 1px 2px;
@@ -176,13 +217,13 @@
 
 /* Section-label pill in dark mode */
 [data-theme="dark"] .section-label {
-  background: rgba(246,109,30,0.14);
+  background: var(--orange-glass);
   color: var(--orange-light);
 }
 
 /* Why-icon / service-icon in dark mode — ensure icon bg is visible */
 [data-theme="dark"] .why-icon {
-  background: rgba(246,109,30,0.16);
+  background: var(--orange-glass);
   color: var(--orange-light);
 }
 [data-theme="dark"] .why-card:hover .why-icon {
@@ -194,7 +235,7 @@
   color: var(--teal-light);
 }
 [data-theme="dark"] .service-card:hover .service-icon {
-  background: rgba(246,109,30,0.2);
+  background: var(--orange-glass);
   color: var(--orange);
 }
 
@@ -342,8 +383,8 @@ input, textarea, select { font: inherit; }
 button:focus-visible, a:focus-visible { border-radius: var(--radius-sm); }
 
 /* Button press feedback — Emil: buttons must feel responsive to press */
-.btn:active { transform: scale(0.97); transition-duration: 80ms; }
-.btn-primary:active { transform: scale(0.97); transition-duration: 80ms; }
+.btn:active { transform: scale(0.97); transition-duration: var(--duration-instant); }
+.btn-primary:active { transform: scale(0.97); transition-duration: var(--duration-instant); }
 
 /* Form shake on invalid submission */
 @keyframes formShake {
@@ -503,7 +544,7 @@ p { line-height: 1.65; color: var(--text); }
   z-index: var(--z-nav);
   background: var(--white);
   border-bottom: 1px solid var(--border);
-  box-shadow: rgba(10,37,41,0.04) 0px 1px 2px 0px;
+  box-shadow: var(--shadow-xs);
   height: var(--nav-h);
   display: flex;
   align-items: center;
@@ -514,7 +555,7 @@ p { line-height: 1.65; color: var(--text); }
   background: rgba(255,255,255,0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  box-shadow: rgba(10,37,41,0.10) 0px 4px 16px 0px;
+  box-shadow: var(--shadow-lg);
   border-color: rgba(219,228,230,0.4);
 }
 
@@ -529,7 +570,7 @@ p { line-height: 1.65; color: var(--text); }
 }
 
 .nav-logo { flex-shrink: 0; display: flex; align-items: center; }
-.nav-logo img { height: 38px; width: auto; }
+.nav-logo img { height: 30px; width: auto; display: block; }
 
 .nav-links {
   display: flex;
@@ -555,7 +596,7 @@ p { line-height: 1.65; color: var(--text); }
   white-space: nowrap;
 }
 
-.nav-links > li > a:hover { color: var(--orange); background: rgba(246,109,30,0.05); }
+.nav-links > li > a:hover { color: var(--orange); background: var(--orange-glass); }
 .nav-links > li.active > a { color: var(--orange); border-bottom-color: var(--orange); }
 
 /* Dropdown */
@@ -586,7 +627,7 @@ p { line-height: 1.65; color: var(--text); }
   opacity: 0;
   visibility: hidden;
   transform: translateY(-8px);
-  transition: opacity .22s var(--ease), transform .22s var(--ease), visibility .22s;
+  transition: opacity var(--duration-base) var(--ease), transform var(--duration-base) var(--ease), visibility var(--duration-base);
 }
 
 .has-dropdown:hover .dropdown {
@@ -774,7 +815,7 @@ p { line-height: 1.65; color: var(--text); }
   font-weight: 400;
   border-radius: var(--radius-full);
   border: 2px solid transparent;
-  transition: transform 160ms var(--ease-out), box-shadow 160ms var(--ease-out), background 120ms var(--ease), border-color 120ms var(--ease), color 120ms var(--ease);
+  transition: var(--transition);
   cursor: pointer;
   white-space: nowrap;
   line-height: 1;
@@ -798,11 +839,11 @@ p { line-height: 1.65; color: var(--text); }
   box-shadow: var(--shadow-btn-h);
   transform: translateY(-2px);
 }
-.btn-primary:active { transform: scale(0.97); box-shadow: var(--shadow-btn); transition-duration: 80ms; }
+.btn-primary:active { transform: scale(0.97); box-shadow: var(--shadow-btn); transition-duration: var(--duration-instant); }
 
 /* Secondary — teal outline */
 .btn-secondary {
-  background: rgba(17,86,95,0.08);
+  background: var(--deep-glass);
   color: var(--teal);
   border-color: var(--teal);
 }
@@ -840,7 +881,7 @@ p { line-height: 1.65; color: var(--text); }
   border-color: transparent;
   padding-inline: 0;
 }
-.btn-ghost:hover { background: rgba(246,109,30,0.1); }
+.btn-ghost:hover { background: var(--orange-glass); }
 
 /* CTA section buttons */
 .btn-cta-white {
@@ -1061,7 +1102,7 @@ p { line-height: 1.65; color: var(--text); }
 .hero-quick-form select:focus,
 .hero-quick-form input:focus {
   border-color: var(--orange);
-  box-shadow: rgba(246,109,30,0.2) 0px 0px 0px 3px;
+  box-shadow: var(--shadow-focus);
   border-width: 2px;
 }
 
@@ -1997,21 +2038,24 @@ p { line-height: 1.65; color: var(--text); }
 
 .tank-card-img {
   position: relative;
-  height: 220px;
+  height: 280px;
   overflow: hidden;
-  background: var(--cream);
+  background: var(--white);
   border-radius: 10px 10px 0 0;
-  aspect-ratio: 16/9;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tank-card-img img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform .55s var(--ease-out);
 }
 
-.tank-card:hover .tank-card-img img { transform: scale(1.06); }
+.tank-card:hover .tank-card-img img { transform: scale(1.05); }
 
 .tank-card-tags {
   position: absolute;
@@ -2406,7 +2450,7 @@ p { line-height: 1.65; color: var(--text); }
 .form-group select:focus {
   border-color: var(--orange);
   border-width: 2px;
-  box-shadow: rgba(246,109,30,0.2) 0px 0px 0px 3px;
+  box-shadow: var(--shadow-focus);
 }
 
 .form-group textarea { resize: vertical; min-height: 120px; height: auto; }
@@ -2860,8 +2904,8 @@ footer {
     100% { opacity: 1; transform: scale(1); }
   }
   @keyframes floatCard {
-    0%   { transform: translateY(0px);  animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
-    50%  { transform: translateY(-8px); animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); }
+    0%   { transform: translateY(0px);  animation-timing-function: var(--ease-in-out); }
+    50%  { transform: translateY(-8px); animation-timing-function: var(--ease-in-out); }
     100% { transform: translateY(0px); }
   }
   @keyframes countGlow {
@@ -2888,7 +2932,7 @@ footer {
 [data-reveal] {
   opacity: 0;
   transform: translateY(14px);
-  transition: opacity .4s var(--ease-out), transform .4s var(--ease-out);
+  transition: opacity var(--duration-slow) var(--ease-out), transform var(--duration-slow) var(--ease-out);
 }
 
 [data-reveal].visible {
@@ -2921,7 +2965,7 @@ footer {
 }
 
 @media (max-width: 960px) {
-  :root { --section-py: 64px; }
+  :root { --section-py: var(--space-16); }
   .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-4 { grid-template-columns: 1fr 1fr; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -2945,7 +2989,7 @@ footer {
 }
 
 @media (max-width: 720px) {
-  :root { --section-py: 48px; --section-py-sm: 40px; }
+  :root { --section-py: var(--space-12); --section-py-sm: var(--space-10); }
   .container, .container-wide, .top-bar-inner, .nav-inner { padding-inline: 16px; }
   .nav-mobile { padding-inline: 16px; }
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
@@ -2987,7 +3031,7 @@ footer {
   filter: blur(8px);
   opacity: 0;
   transform: scale(1.02);
-  transition: filter .6s var(--ease-out), opacity .5s var(--ease-out), transform .6s var(--ease-out);
+  transition: filter var(--duration-slower) var(--ease-out), opacity var(--duration-slow) var(--ease-out), transform var(--duration-slower) var(--ease-out);
 }
 .img-blur-up.loaded {
   filter: blur(0);
@@ -3053,7 +3097,7 @@ footer {
    SERVICE CARD — HOVER CHOREOGRAPHY UPGRADE
    ============================================================ */
 .service-card {
-  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out), background .2s;
+  transition: transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out), background 120ms var(--ease);
 }
 .service-card:hover {
   transform: translateY(-6px);
